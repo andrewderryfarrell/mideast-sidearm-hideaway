@@ -35,6 +35,7 @@ namespace SpaceGame
         InputManager _inputManager = new InputManager();
         InventoryManager _weaponManager = new InventoryManager();
         List<Gamestate> _stateStack = new List<Gamestate>();  
+        bool _init;         //is screen size set yet? (hack)
 
         public static GameStates gamestate;
 
@@ -164,6 +165,14 @@ namespace SpaceGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            //hack to set screen size (setting during initialize doesn't work on linux)
+			if (!_init) {
+				_init = true;
+				graphics.PreferredBackBufferWidth = 1280;
+				graphics.PreferredBackBufferHeight = 720;
+				graphics.IsFullScreen = false;
+				graphics.ApplyChanges();
+			}
 
             if (_inputManager.Exit)
                 this.Exit();
