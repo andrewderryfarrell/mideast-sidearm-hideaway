@@ -76,8 +76,9 @@ namespace SpaceGame.states
             }
             //Test code to set weapons 1-6 to created weapons
             im.setPrimaryWeapon(new ProjectileWeapon("Rocket", _player));
-            im.setSecondaryWeapon(new ThrowableWeapon("Cryonade", _player));
+            im.setSecondaryWeapon(new ProjectileWeapon("Flamethrower", _player));
             im.setPrimaryGadget(new Gadget("Teleporter", this));
+            im.setSecondaryGadget(new Gadget("Stopwatch", this));
             im.setSlot(1, new ThrowableWeapon("Cryonade", _player));
 
             //Set Weapon holders in level
@@ -93,6 +94,7 @@ namespace SpaceGame.states
             _foodCarts = data.FoodCarts;
 
             _primaryGadget = im.getPrimaryGadget();
+            _secondaryGadget = im.getSecondaryGadget();
             _inventoryManager = im;
             
             userInterface = new GUI(_player, _blackHole);
@@ -131,10 +133,24 @@ namespace SpaceGame.states
             }
             _player.Update(gameTime, _levelBounds);
             _primaryGadget.Update(gameTime);
+            _secondaryGadget.Update(gameTime);
             _blackHole.Update(gameTime);
 
+            if (_player.UnitLifeState == PhysicalUnit.LifeState.Destroyed || _player.UnitLifeState == PhysicalUnit.LifeState.Ghost || _player.UnitLifeState == PhysicalUnit.LifeState.Disabled)
+            {
+                //Player died or go eaten
+                foreach (Wave w in _waves)
+                {
+                    w.SpawnEnable = false;
+                }
+                foreach (Unicorn u in _unicorns)
+                {
+                    u.SpawnEnable = false;
+                }
 
-            if (_blackHole.State == BlackHole.BlackHoleState.Overdrive)
+                ReplaceState = new Gamemenu();
+            }
+            else if (_blackHole.State == BlackHole.BlackHoleState.Overdrive)
             {
                 foreach (Wave w in _waves)
                 {
@@ -144,6 +160,20 @@ namespace SpaceGame.states
                 {
                     u.SpawnEnable = false;
                 }
+            }
+            else if (_blackHole.State == BlackHole.BlackHoleState.Exhausted)
+            {
+                //Black hole cannot effect anything anymore
+                foreach (Wave w in _waves)
+                {
+                    w.SpawnEnable = false;
+                }
+                foreach (Unicorn u in _unicorns)
+                {
+                    u.SpawnEnable = false;
+                }
+
+                ReplaceState = new Gamemenu();
             }
           
             for (int i = 0; i < _waves.Length; i++)
@@ -191,9 +221,6 @@ namespace SpaceGame.states
             if (input.Exit)
                 this.PopState = true;
 
-            if (_blackHole.State == BlackHole.BlackHoleState.Exhausted)
-                return;
-
             _player.MoveDirection = input.MoveDirection;
             _player.LookDirection = XnaHelper.DirectionBetween(_player.Center, input.MouseLocation);
 
@@ -214,6 +241,10 @@ namespace SpaceGame.states
                 if (input.TriggerGadget1)
                 {
                     _primaryGadget.Trigger();
+                }
+                if (input.TriggerGadget2)
+                {
+                    _secondaryGadget.Trigger();
                 }
             }
 

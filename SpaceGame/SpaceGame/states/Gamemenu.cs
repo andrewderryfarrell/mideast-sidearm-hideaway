@@ -81,7 +81,6 @@ namespace SpaceGame.states
                     {
                         //call method to load settings
                         this.PopState = true;
-
                     }
 
                     else if (this.Iterator == 2)

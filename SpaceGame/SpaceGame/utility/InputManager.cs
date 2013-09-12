@@ -200,7 +200,8 @@ namespace SpaceGame.utility
         /// </summary>
         public bool DebugKey    
         {
-            get { return currentKeyboardState.IsKeyDown(Keys.B); }
+            //get { return keyTapped(Keys.B); }
+            get { return false; }
         }
         #endregion
         #endregion

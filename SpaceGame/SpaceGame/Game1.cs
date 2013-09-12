@@ -179,6 +179,14 @@ namespace SpaceGame
                 _inputManager.SetCameraOffset(Vector2.Zero);    //reset inputmanager camera offset
             }
 
+            if (_stateStack.Last().PopState == true)
+            {
+                _stateStack.RemoveAt(_stateStack.Count - 1);
+                if (_stateStack.Count == 0)
+                {
+                    this.Exit();
+                }
+            }
             base.Update(gameTime);
         }
 

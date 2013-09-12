@@ -156,8 +156,11 @@ namespace SpaceGame.utility
                     _currentSlot = 0;
                     _item = _slots[0];
                 }
-                _currentSlot = _currentSlot + 1;
-                _item = _slots[_currentSlot];
+                else
+                {
+                    _currentSlot = _currentSlot + 1;
+                    _item = _slots[_currentSlot];
+                }
             }
             else if (input.bCycle)
             {
@@ -167,8 +170,11 @@ namespace SpaceGame.utility
                     _currentSlot = 5;
                     _item = _slots[5];
                 }
-                _currentSlot = _currentSlot + 1;
-                _item = _slots[_currentSlot];
+                else
+                {
+                    _currentSlot = _currentSlot - 1;
+                    _item = _slots[_currentSlot];
+                }
             }
             
         }
